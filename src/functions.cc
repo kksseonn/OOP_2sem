@@ -12,16 +12,6 @@ Functions::Functions() {
     c = 1;
 }
 
-Functions::Functions(FunctionsType type, float x, float a, float b, float c, float w, float fi) {
-    this->type = type;
-    this->x = x;
-    this->a = a;
-    this->b = b;
-    this->c = c;
-    this->w = w;
-    this->fi = fi;
-}
-
 FunctionsType Functions::get_type() {
     return type;
 }

@@ -27,10 +27,3 @@ TEST(FunctionTest, SetterFunctionsTest) {
     EXPECT_NEAR(func.get_b(), 2.2, 0.001);
     EXPECT_NEAR(func.get_c(), 2.3, 0.001);
 }
-
-TEST(FunctionTest, FunctionConstructorTest) {
-    Functions func = Functions(HARMONIC, 2, 2.1, 2.2, 2.3, 2.4, 2.5);
-    EXPECT_EQ(func.get_type(), HARMONIC);
-    EXPECT_NEAR(func.get_x(), 2,0.00002);
-    // TODO checking other cofficience
-}
