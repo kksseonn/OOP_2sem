@@ -1,6 +1,5 @@
 #pragma once
 
-int sum_stub(int lhs, int rhs);
 enum FunctionsType {
 	QUADRATIC,
 	HARMONIC
@@ -11,6 +10,7 @@ class Functions {
 	float x, a, b, c, w, fi;
 public:
 	Functions();
+	Functions(FunctionsType type, float x, float a, float b, float c, float w, float fi);
 
 	FunctionsType get_type();
 	float get_x();
@@ -28,4 +28,7 @@ public:
 	void set_w(float w);
 	void set_fi(float fi);
 
+	float calc_from_argument();
+	float getting_the_derivative();
+	float obtaining_the_antiderivative();
 };

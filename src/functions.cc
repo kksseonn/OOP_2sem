@@ -1,8 +1,6 @@
 #include <functions/functions.h>
-
-int sum_stub(int lhs, int rhs) {
-    return lhs + rhs;
-}
+#include <cmath>
+#include <stdexcept>
 
 Functions::Functions() {
     type = QUADRATIC;
@@ -10,6 +8,18 @@ Functions::Functions() {
     a = 1;
     b = 1;
     c = 1;
+    w = 0;
+    fi = 0;
+}
+
+Functions::Functions(FunctionsType type, float x, float a, float b, float c, float w, float fi) {
+    this->type = type;
+    this->x = x;
+    this->a = a;
+    this->b = b;
+    this->c = c;
+    this->w = w;
+    this->fi = fi;
 }
 
 FunctionsType Functions::get_type() {
@@ -68,3 +78,45 @@ void Functions::set_fi(float fi) {
     this->fi = fi;
 }
 
+float Functions::calc_from_argument() {
+    switch (type)
+    {
+    case QUADRATIC:
+        return a * pow(x, 2) + b * x + c;
+    case HARMONIC:
+        return a * cos(w * x + fi);
+    }
+}
+
+float Functions::getting_the_derivative() {
+    switch (type)
+    {
+    case QUADRATIC:
+        return 2*a*x+b;
+    case HARMONIC:
+        return (-a)* sin(w * x + fi)* w;
+    }
+}
+
+float Functions::obtaining_the_antiderivative() {
+    switch (type)
+    {
+    case QUADRATIC:
+        return ((a*pow(x,3))/3)+((b*pow(x,2))/2)+c*x;
+    case HARMONIC:
+        if (w == 0) {
+            throw std::runtime_error("denominator is wrong.");
+        }
+        return (a*sin(w*x+fi))/w;
+    }
+}
+
+//float Functions::search_in_the_last_feature_set() {
+//    switch (type)
+//    {
+//    case QUADRATIC:
+//        break;
+//    case HARMONIC:
+//        break;
+//    }
+//}
