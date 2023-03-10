@@ -2,7 +2,7 @@
 #include <cmath>
 #include <stdexcept>
 
-Functions::Functions() {
+Function::Function() {
     type = QUADRATIC;
     x = 1;
     a = 1;
@@ -12,7 +12,7 @@ Functions::Functions() {
     fi = 0;
 }
 
-Functions::Functions(FunctionsType type, float x, float a, float b, float c, float w, float fi) {
+Function::Function(FunctionsType type, float x, float a, float b, float c, float w, float fi) {
     this->type = type;
     this->x = x;
     this->a = a;
@@ -22,63 +22,63 @@ Functions::Functions(FunctionsType type, float x, float a, float b, float c, flo
     this->fi = fi;
 }
 
-FunctionsType Functions::get_type() {
+FunctionsType Function::get_type() {
     return type;
 }
 
-float Functions::get_x() {
+float Function::get_x() {
     return x;
 }
 
-float Functions::get_a() {
+float Function::get_a() {
     return a;
 }
 
-float Functions::get_b() {
+float Function::get_b() {
     return b;
 }
 
-float Functions::get_c() {
+float Function::get_c() {
     return c;
 }
 
-float Functions::get_w() {
+float Function::get_w() {
     return w;
 }
 
-float Functions::get_fi() {
+float Function::get_fi() {
     return fi;
 }
 
-void Functions::set_type(FunctionsType type) {
+void Function::set_type(FunctionsType type) {
     this->type = type;
 }
 
-void Functions::set_x(float x) {
+void Function::set_x(float x) {
     this->x = x;
 }
 
-void Functions::set_a(float a) {
+void Function::set_a(float a) {
     this->a = a;
 }
 
-void Functions::set_b(float b) {
+void Function::set_b(float b) {
     this->b = b;
 }
 
-void Functions::set_c(float c) {
+void Function::set_c(float c) {
     this->c = c;
 }
 
-void Functions::set_w(float w) {
+void Function::set_w(float w) {
     this->w = w;
 }
 
-void Functions::set_fi(float fi) {
+void Function::set_fi(float fi) {
     this->fi = fi;
 }
 
-float Functions::calc_from_argument() {
+float Function::calc_from_argument() {
     switch (type)
     {
     case QUADRATIC:
@@ -88,7 +88,7 @@ float Functions::calc_from_argument() {
     }
 }
 
-float Functions::getting_the_derivative() {
+float Function::getting_the_derivative() {
     switch (type)
     {
     case QUADRATIC:
@@ -98,7 +98,7 @@ float Functions::getting_the_derivative() {
     }
 }
 
-float Functions::obtaining_the_antiderivative() {
+float Function::obtaining_the_antiderivative() {
     switch (type)
     {
     case QUADRATIC:
@@ -111,12 +111,19 @@ float Functions::obtaining_the_antiderivative() {
     }
 }
 
-//float Functions::search_in_the_last_feature_set() {
-//    switch (type)
-//    {
-//    case QUADRATIC:
-//        break;
-//    case HARMONIC:
-//        break;
-//    }
-//}
+FunctionsSet::FunctionsSet() {
+    this->size = 5;
+    for (int i = 0; i < 5; ++i) this->funcs[i]=Function();
+}
+
+Function FunctionsSet::get_function_by_index(int ind) {
+    return funcs[ind];
+}
+
+int FunctionsSet::get_size() {
+    return size;
+}
+
+Function& FunctionsSet::operator[](int ind) {
+    return funcs[ind];
+}

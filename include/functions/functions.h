@@ -5,12 +5,12 @@ enum FunctionsType {
 	HARMONIC
 };
 
-class Functions {
+class Function {
 	FunctionsType type;
 	float x, a, b, c, w, fi;
 public:
-	Functions();
-	Functions(FunctionsType type, float x, float a, float b, float c, float w, float fi);
+	Function();
+	Function(FunctionsType type, float x, float a, float b, float c, float w, float fi);
 
 	FunctionsType get_type();
 	float get_x();
@@ -31,4 +31,17 @@ public:
 	float calc_from_argument();
 	float getting_the_derivative();
 	float obtaining_the_antiderivative();
+};
+
+class FunctionsSet {
+	static const int CAPACITY = 10;
+	Function funcs[CAPACITY];
+	int size;
+public:
+	FunctionsSet();
+	FunctionsSet(Function funcs[], int size);
+
+	int get_size();
+	Function get_function_by_index(int ind);
+	Function& operator[](int ind);
 };
