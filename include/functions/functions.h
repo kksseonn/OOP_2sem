@@ -44,4 +44,8 @@ public:
 	int get_size();
 	Function get_function_by_index(int ind);
 	Function& operator[](int ind);
+	void add(int ind, Function func);
+	void del(int ind);
+	void clear();
+	int find_function_max_derivative();
 };

@@ -113,7 +113,19 @@ float Function::obtaining_the_antiderivative() {
 
 FunctionsSet::FunctionsSet() {
     this->size = 5;
-    for (int i = 0; i < 5; ++i) this->funcs[i]=Function();
+    for (int i = 0; i < size; ++i) this->funcs[i]=Function();
+}
+
+FunctionsSet::FunctionsSet(Function func[], int size) {
+    this->size = size;
+    for (int i = 0; i < size; ++i) {
+        this->funcs[i].set_type(func[i].get_type());
+        this->funcs[i].set_a(func[i].get_a());
+        this->funcs[i].set_b(func[i].get_b());
+        this->funcs[i].set_c(func[i].get_c());
+        this->funcs[i].set_w(func[i].get_w());
+        this->funcs[i].set_fi(func[i].get_fi());
+    }
 }
 
 Function FunctionsSet::get_function_by_index(int ind) {
@@ -126,4 +138,45 @@ int FunctionsSet::get_size() {
 
 Function& FunctionsSet::operator[](int ind) {
     return funcs[ind];
+}
+
+void FunctionsSet::add(int ind, Function func) {
+    if (size == CAPACITY) {
+        throw std::runtime_error("Ind out of the range");
+    }
+    if (ind < 0 || ind >= size) {
+        throw std::runtime_error("Ind out of the range");
+    }
+    for (int i = size - 1; i >= ind; --i) {
+        funcs[i] = funcs[i - 1];
+    }
+    funcs[ind] = func;
+    ++size;
+}
+
+void FunctionsSet::del(int ind) {
+    if (size <= 0) {
+        throw std::runtime_error("Array is empty");
+    }
+    for (int i = ind; i < size - 1; ++i) {
+        funcs[i] = funcs[i + 1];
+    }
+    --size;
+}
+
+void FunctionsSet::clear() {
+    size = 0;
+}
+
+int FunctionsSet::find_function_max_derivative() {
+    int ind = 0;
+    double max_der = funcs[0].getting_the_derivative();
+    for (int i = 1; i < size - 1; ++i) {
+        double cur_der = funcs[i].getting_the_derivative();
+        if (cur_der > max_der) {
+            ind = i;
+            max_der = cur_der;
+        }
+    }
+    return ind;
 }
