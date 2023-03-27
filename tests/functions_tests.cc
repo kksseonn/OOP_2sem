@@ -3,7 +3,7 @@
 #define SIZE 4
 //1
 TEST(FunctionTest, DefoltConstructorFunctionTest) {
-    Function func = Function();
+    Function func;
     EXPECT_EQ(func.get_type(),QUADRATIC);
     EXPECT_NEAR(func.get_x(), 1, 0.1);
     EXPECT_NEAR(func.get_a(), 1, 0.1);
@@ -15,7 +15,7 @@ TEST(FunctionTest, DefoltConstructorFunctionTest) {
 //2
 TEST(FunctionTest, SetterFunctionsTest) {
 
-    Function func = Function();
+    Function func;
     func.set_x(2);
     func.set_a(2.1);
     func.set_b(2.2);
@@ -64,14 +64,14 @@ TEST(FunctionsTest, FunctionsAntiderivativeTest) {
     EXPECT_NEAR(func.obtaining_the_antiderivative(), 12.666, 0.002);
     EXPECT_NEAR(func1.obtaining_the_antiderivative(), 0.1050, 0.002);
 }
-
+//7
 TEST(FunctionsSetTest, FunctionsSetDefaultConstructor) {
-    FunctionsSet funcs = FunctionsSet();
+    FunctionsSet funcs;
     EXPECT_EQ(funcs.get_size(), 5);
     EXPECT_EQ(funcs[4].get_type(), QUADRATIC);
     EXPECT_EQ(funcs[4].calc_from_argument(), 3);
 }
-
+//8
 TEST(FunctionsSetTest, FunctionSetConstructor){
     Function func[SIZE];
     func[0] = Function(QUADRATIC, 1, 2, 3, 4, 0, 0);
@@ -83,22 +83,22 @@ TEST(FunctionsSetTest, FunctionSetConstructor){
     EXPECT_EQ(func[0].get_type(), QUADRATIC);
     EXPECT_EQ(func[1].get_type(), HARMONIC);
 }
-
+//9
 TEST(FunctionsSetTest, FunctionsSetAddTest) {
-    FunctionsSet funcs = FunctionsSet();
+    FunctionsSet funcs;
     Function f = Function(HARMONIC, 2, 3, 0, 0, 4, 5);
     funcs.add(2, f);
     EXPECT_EQ(funcs.get_size(), 6);
     EXPECT_EQ(funcs[2].get_type(), HARMONIC);
 }
-
+//10
 TEST(FunctionsSetTest, FunctionsSetDelTest) {
-    FunctionsSet funcs = FunctionsSet();
+    FunctionsSet funcs;
     funcs.del(2);
     EXPECT_EQ(funcs.get_size(), 4);
     EXPECT_EQ(funcs[3].get_type(), QUADRATIC);
 }
-
+//11
 TEST(FunctionsSetTest, FunctionsSetMaxDerTest) {
     Function funcs[SIZE];
     funcs[0] = Function(QUADRATIC, 1, 2, 3, 4, 0, 0);
@@ -108,21 +108,27 @@ TEST(FunctionsSetTest, FunctionsSetMaxDerTest) {
     FunctionsSet set = FunctionsSet(funcs, SIZE);
     EXPECT_EQ(set.find_function_max_derivative(), 0);
 }
-
+//12
 TEST(ExceptionsTest, DenominatorTest) {
     Function func = Function(HARMONIC, 2, 1, 0, 0, 0, 5);
     EXPECT_THROW(func.obtaining_the_antiderivative(), std::runtime_error);
 }
-
+//13
 TEST(ExceptionsTest, AddTest) {
-    FunctionsSet func = FunctionsSet();
-    Function func1 = Function();
+    FunctionsSet func;
+    Function func1;
     EXPECT_THROW(func.add(6, func1), std::runtime_error);
     EXPECT_THROW(func.add(-1, func1), std::runtime_error);
-}
-
+}//14
 TEST(ExceptionsTest, DelTest) {
-    FunctionsSet func = FunctionsSet();
+    FunctionsSet func;
     func.clear();
     EXPECT_THROW(func.del(2), std::runtime_error);
 }
+//15
+TEST(ExceptionsTest, OperatorTest) {
+    FunctionsSet func;
+    EXPECT_THROW(func[-1].get_type(), std::runtime_error);
+    EXPECT_THROW(func[10].get_type(), std::runtime_error);
+}
+

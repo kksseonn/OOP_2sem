@@ -112,8 +112,10 @@ float Function::obtaining_the_antiderivative() {
 }
 
 FunctionsSet::FunctionsSet() {
-    this->size = 5;
-    for (int i = 0; i < size; ++i) this->funcs[i]=Function();
+    size = 5;
+    for (int i = 0; i < size; ++i) {
+        funcs[i] = Function();
+    }
 }
 
 FunctionsSet::FunctionsSet(Function func[], int size) {
@@ -136,7 +138,17 @@ int FunctionsSet::get_size() {
     return size;
 }
 
+Function FunctionsSet::operator[](int ind) const {
+    if (ind<0 || ind>size) {
+        throw std::runtime_error("invalid index");
+    }
+    return funcs[ind];
+}
+
 Function& FunctionsSet::operator[](int ind) {
+    if (ind<0 || ind>size) {
+        throw std::runtime_error("invalid index");
+    }
     return funcs[ind];
 }
 
@@ -144,7 +156,7 @@ void FunctionsSet::add(int ind, Function func) {
     if (size == CAPACITY) {
         throw std::runtime_error("Ind out of the range");
     }
-    if (ind < 0 || ind >= size) {
+    if (ind < 0 || ind > size) {
         throw std::runtime_error("Ind out of the range");
     }
     for (int i = size - 1; i >= ind; --i) {
