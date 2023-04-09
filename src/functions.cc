@@ -1,6 +1,23 @@
+#pragma warning(disable:6386)
 #include <functions/functions.h>
 #include <cmath>
+#include <iostream>
 #include <stdexcept>
+#include <string>
+#define SIZE 4
+
+std::string string_functions_type(FunctionsType type) {
+    switch (type)
+    {
+    case QUADRATIC:
+        return "QUADRATIC";
+    case HARMONIC:
+        return "HARMONIC";
+    default:
+        throw std::runtime_error("wrong type exception");
+    }
+    return "";
+}
 
 Function::Function() {
     type = QUADRATIC;
@@ -111,59 +128,78 @@ float Function::obtaining_the_antiderivative() {
     }
 }
 
+std::ostream& operator<<(std::ostream& out, const Function& func) {
+    out << func.type;
+    return out;
+}
+
 FunctionsSet::FunctionsSet() {
-    size = 5;
+    this->size = 5;
+    function = new Function * [size];
     for (int i = 0; i < size; ++i) {
-        funcs[i] = Function();
+        this->function[i] = new Function();
     }
 }
 
-FunctionsSet::FunctionsSet(Function func[], int size) {
+FunctionsSet::FunctionsSet(int size, FunctionPtr* functions) {
     this->size = size;
+    function = new Function * [size];
     for (int i = 0; i < size; ++i) {
-        this->funcs[i].set_type(func[i].get_type());
-        this->funcs[i].set_a(func[i].get_a());
-        this->funcs[i].set_b(func[i].get_b());
-        this->funcs[i].set_c(func[i].get_c());
-        this->funcs[i].set_w(func[i].get_w());
-        this->funcs[i].set_fi(func[i].get_fi());
+        this->function[i] = new Function();
+        this->function[i]->set_type(function[i]->get_type());
+        this->function[i]->set_x(function[i]->get_x());
+        this->function[i]->set_a(function[i]->get_a());
+        this->function[i]->set_b(function[i]->get_b());
+        this->function[i]->set_c(function[i]->get_c());
+        this->function[i]->set_w(function[i]->get_w());
+        this->function[i]->set_fi(function[i]->get_fi());
     }
 }
 
-Function FunctionsSet::get_function_by_index(int ind) {
-    return funcs[ind];
+FunctionsSet::~FunctionsSet() {
+    for (int i = 0; i < size; ++i) {
+        delete function[i];
+    }
+    delete[] function;
+}
+
+FunctionPtr FunctionsSet::get_function_by_index(int i) {
+    return function[i];
 }
 
 int FunctionsSet::get_size() {
     return size;
 }
 
-Function FunctionsSet::operator[](int ind) const {
+FunctionPtr FunctionsSet::operator[](int ind) const {
     if (ind<0 || ind>size) {
         throw std::runtime_error("invalid index");
     }
-    return funcs[ind];
+    return function[ind];
 }
 
-Function& FunctionsSet::operator[](int ind) {
+FunctionPtr& FunctionsSet::operator[](int ind) {
     if (ind<0 || ind>size) {
         throw std::runtime_error("invalid index");
     }
-    return funcs[ind];
+    return function[ind];
+}
+
+FunctionsSet& FunctionsSet::operator =(FunctionsSet other) {
+    swap(other);
+    return *this;
 }
 
 void FunctionsSet::add(int ind, Function func) {
-    if (size == CAPACITY) {
+    if (ind < 0 || ind < size) {
         throw std::runtime_error("Ind out of the range");
     }
-    if (ind < 0 || ind > size) {
-        throw std::runtime_error("Ind out of the range");
-    }
-    for (int i = size - 1; i >= ind; --i) {
-        funcs[i] = funcs[i - 1];
-    }
-    funcs[ind] = func;
     ++size;
+    FunctionPtr* functions = new Function * [size];
+    for (int i = size - 1; i > ind; --i) {
+        functions[i] = new Function(*this->function[i - 1]);
+    }
+    std::swap(this->function, functions);
 }
 
 void FunctionsSet::del(int ind) {
@@ -171,24 +207,35 @@ void FunctionsSet::del(int ind) {
         throw std::runtime_error("Array is empty");
     }
     for (int i = ind; i < size - 1; ++i) {
-        funcs[i] = funcs[i + 1];
+        function[i] = function[i + 1];
     }
     --size;
 }
 
 void FunctionsSet::clear() {
+    function = nullptr;
     size = 0;
+}
+
+void FunctionsSet::print_current(int ind) {
+    system("cls");
+    std::cout << *function[ind];
 }
 
 int FunctionsSet::find_function_max_derivative() {
     int ind = 0;
-    double max_der = funcs[0].getting_the_derivative();
+    double max_der = function[0]->getting_the_derivative();
     for (int i = 1; i < size - 1; ++i) {
-        double cur_der = funcs[i].getting_the_derivative();
+        double cur_der = function[i]->getting_the_derivative();
         if (cur_der > max_der) {
             ind = i;
             max_der = cur_der;
         }
     }
     return ind;
+}
+
+void FunctionsSet::swap(FunctionsSet& other) {
+    std::swap(function, other.function);
+    std::swap(size, other.size);
 }

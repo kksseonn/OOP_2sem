@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#define FunctionPtr Function*
 
 enum FunctionsType {
 	QUADRATIC,
@@ -31,15 +33,17 @@ public:
 	float calc_from_argument();
 	float getting_the_derivative();
 	float obtaining_the_antiderivative();
+	//void swap(Function& other);
+	//Function& operator=(Function other);
 };
 
 class FunctionsSet {
-	static const int CAPACITY = 10;
-	Function funcs[CAPACITY];
+	FunctionPtr* function;
 	int size;
 public:
 	FunctionsSet();
-	FunctionsSet(Function funcs[], int size);
+	FunctionsSet(int size, FunctionPtr* functions);
+	~FunctionsSet();
 
 	int get_size();
 	Function get_function_by_index(int ind);
