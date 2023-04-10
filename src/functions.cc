@@ -146,13 +146,13 @@ FunctionsSet::FunctionsSet(int size, FunctionPtr* functions) {
     function = new Function * [size];
     for (int i = 0; i < size; ++i) {
         this->function[i] = new Function();
-        this->function[i]->set_type(function[i]->get_type());
-        this->function[i]->set_x(function[i]->get_x());
-        this->function[i]->set_a(function[i]->get_a());
-        this->function[i]->set_b(function[i]->get_b());
-        this->function[i]->set_c(function[i]->get_c());
-        this->function[i]->set_w(function[i]->get_w());
-        this->function[i]->set_fi(function[i]->get_fi());
+        this->function[i]->set_type(functions[i]->get_type());
+        this->function[i]->set_x(functions[i]->get_x());
+        this->function[i]->set_a(functions[i]->get_a());
+        this->function[i]->set_b(functions[i]->get_b());
+        this->function[i]->set_c(functions[i]->get_c());
+        this->function[i]->set_w(functions[i]->get_w());
+        this->function[i]->set_fi(functions[i]->get_fi());
     }
 }
 
@@ -191,11 +191,17 @@ FunctionsSet& FunctionsSet::operator =(FunctionsSet other) {
 }
 
 void FunctionsSet::add(int ind, Function func) {
-    if (ind < 0 || ind < size) {
+    if (ind < 0 || ind > size) {
         throw std::runtime_error("Ind out of the range");
     }
     ++size;
     FunctionPtr* functions = new Function * [size];
+    for (int i = 0; i < ind; ++i){
+        functions[i] = new Function(*this->function[i]);
+    }
+
+    functions[ind] = new Function(func);
+
     for (int i = size - 1; i > ind; --i) {
         functions[i] = new Function(*this->function[i - 1]);
     }
@@ -227,7 +233,7 @@ int FunctionsSet::find_function_max_derivative() {
     double max_der = function[0]->getting_the_derivative();
     for (int i = 1; i < size - 1; ++i) {
         double cur_der = function[i]->getting_the_derivative();
-        if (cur_der > max_der) {
+        if (cur_der >= max_der) {
             ind = i;
             max_der = cur_der;
         }

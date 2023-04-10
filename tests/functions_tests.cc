@@ -66,22 +66,21 @@ TEST(FunctionsTest, FunctionsAntiderivativeTest) {
 }
 //7
 TEST(FunctionsSetTest, FunctionsSetDefaultConstructor) {
-    FunctionsSet funcs;
-    EXPECT_EQ(funcs.get_size(), 5);
-    EXPECT_EQ(funcs[4].get_type(), QUADRATIC);
-    EXPECT_EQ(funcs[4].calc_from_argument(), 3);
+    FunctionsSet set;
+    EXPECT_EQ(set.get_size(), 5);
 }
 //8
 TEST(FunctionsSetTest, FunctionSetConstructor){
-    Function func[SIZE];
-    func[0] = Function(QUADRATIC, 1, 2, 3, 4, 0, 0);
-    func[1] = Function(HARMONIC, 1, 1, 0, 0, 1, 1);
-    func[2] = Function(QUADRATIC, 2, 2, 2, 2, 0, 0);
-    func[3] = Function(HARMONIC, 3, 3, 0, 0, 3, 3);
-    FunctionsSet funcs = FunctionsSet(func, SIZE);
-    EXPECT_EQ(func[2].getting_the_derivative(), 10);
-    EXPECT_EQ(func[0].get_type(), QUADRATIC);
-    EXPECT_EQ(func[1].get_type(), HARMONIC);
+    FunctionPtr* functions = new Function * [SIZE];
+    functions[0] = new Function(QUADRATIC, 1, 2, 3, 4, 0, 0);
+    functions[1] = new Function(HARMONIC, 1, 1, 0, 0, 1, 1);
+    functions[2] = new Function(QUADRATIC, 2, 2, 2, 2, 0, 0);
+    functions[3] = new Function(HARMONIC, 3, 3, 0, 0, 3, 3);
+    FunctionsSet func = FunctionsSet(SIZE, functions);
+    EXPECT_EQ(func.get_size(), SIZE);
+    EXPECT_EQ(func[2]->getting_the_derivative(), 10);
+    EXPECT_EQ(func[0]->get_type(), QUADRATIC);
+    EXPECT_EQ(func[1]->get_type(), HARMONIC);
 }
 //9
 TEST(FunctionsSetTest, FunctionsSetAddTest) {
@@ -89,25 +88,32 @@ TEST(FunctionsSetTest, FunctionsSetAddTest) {
     Function f = Function(HARMONIC, 2, 3, 0, 0, 4, 5);
     funcs.add(2, f);
     EXPECT_EQ(funcs.get_size(), 6);
-    EXPECT_EQ(funcs[2].get_type(), HARMONIC);
+    EXPECT_EQ(funcs[2]->get_type(), HARMONIC);
 }
 //10
 TEST(FunctionsSetTest, FunctionsSetDelTest) {
     FunctionsSet funcs;
     funcs.del(2);
     EXPECT_EQ(funcs.get_size(), 4);
-    EXPECT_EQ(funcs[3].get_type(), QUADRATIC);
+    EXPECT_EQ(funcs[3]->get_type(), QUADRATIC);
 }
 //11
 TEST(FunctionsSetTest, FunctionsSetMaxDerTest) {
-    Function funcs[SIZE];
-    funcs[0] = Function(QUADRATIC, 1, 2, 3, 4, 0, 0);
-    funcs[1] = Function(HARMONIC, 1, 1, 0, 0, 1, 1);
-    funcs[2] = Function(QUADRATIC, 2, 2, 2, 2, 0, 0);
-    funcs[3] = Function(HARMONIC, 3, 3, 0, 0, 3, 3);
-    FunctionsSet set = FunctionsSet(funcs, SIZE);
-    EXPECT_EQ(set.find_function_max_derivative(), 0);
+    FunctionPtr* funcs = new Function * [SIZE];
+    funcs[0] = new Function(QUADRATIC, 1, 2, 3, 4, 0, 0);
+    funcs[1] = new Function(HARMONIC, 1, 1, 0, 0, 1, 1);
+    funcs[2] = new Function(QUADRATIC, 2, 2, 2, 2, 0, 0);
+    funcs[3] = new Function(HARMONIC, 3, 3, 0, 0, 3, 3);
+    FunctionsSet set = FunctionsSet(SIZE, funcs);
+    EXPECT_EQ(set.find_function_max_derivative(), 2);
 }
+
+TEST(FunctionsSetTest, FunctionsSetClearTest) {
+    FunctionsSet funcs;
+    funcs.clear();
+    EXPECT_EQ(funcs.get_size(), 0);
+}
+
 //12
 TEST(ExceptionsTest, DenominatorTest) {
     Function func = Function(HARMONIC, 2, 1, 0, 0, 0, 5);
@@ -128,7 +134,7 @@ TEST(ExceptionsTest, DelTest) {
 //15
 TEST(ExceptionsTest, OperatorTest) {
     FunctionsSet func;
-    EXPECT_THROW(func[-1].get_type(), std::runtime_error);
-    EXPECT_THROW(func[10].get_type(), std::runtime_error);
+    EXPECT_THROW(func[-1]->get_type(), std::runtime_error);
+    EXPECT_THROW(func[10]->get_type(), std::runtime_error);
 }
 

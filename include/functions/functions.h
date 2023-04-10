@@ -33,8 +33,8 @@ public:
 	float calc_from_argument();
 	float getting_the_derivative();
 	float obtaining_the_antiderivative();
-	//void swap(Function& other);
-	//Function& operator=(Function other);
+
+	friend std::ostream& operator<<(std::ostream& out, const Function& func);
 };
 
 class FunctionsSet {
@@ -46,11 +46,17 @@ public:
 	~FunctionsSet();
 
 	int get_size();
-	Function get_function_by_index(int ind);
-	Function operator[](int ind) const;
-	Function& operator[](int ind);
+	FunctionPtr get_function_by_index(int ind);
+
+	FunctionPtr operator[](int ind) const;
+	FunctionPtr& operator[](int ind);
+	FunctionsSet& operator=(FunctionsSet other);
+
 	void add(int ind, Function func);
 	void del(int ind);
 	void clear();
+	void print_current(int ind);
 	int find_function_max_derivative();
+	void swap(FunctionsSet& other);
+
 };
