@@ -14,7 +14,7 @@ public:
 	Function();
 	Function(FunctionsType type, float x, float a, float b, float c, float w, float fi);
 
-	FunctionsType get_type();
+	FunctionsType get_type() const;
 	float get_x();
 	float get_a();
 	float get_b();
@@ -34,8 +34,12 @@ public:
 	float getting_the_derivative();
 	float obtaining_the_antiderivative();
 
+	friend std::istream& operator>>(std::istream& in, Function& func);
 	friend std::ostream& operator<<(std::ostream& out, const Function& func);
 };
+
+bool operator ==(const Function& func, const Function& other);
+bool operator != (const Function& func, const Function& other);
 
 class FunctionsSet {
 	FunctionPtr* function;
@@ -43,20 +47,19 @@ class FunctionsSet {
 public:
 	FunctionsSet();
 	FunctionsSet(int size, FunctionPtr* functions);
+	FunctionsSet(const FunctionsSet& func);
 	~FunctionsSet();
 
 	int get_size();
 	FunctionPtr get_function_by_index(int ind);
-
 	FunctionPtr operator[](int ind) const;
 	FunctionPtr& operator[](int ind);
 	FunctionsSet& operator=(FunctionsSet other);
-
+	
 	void add(int ind, Function func);
 	void del(int ind);
 	void clear();
 	void print_current(int ind);
 	int find_function_max_derivative();
 	void swap(FunctionsSet& other);
-
 };

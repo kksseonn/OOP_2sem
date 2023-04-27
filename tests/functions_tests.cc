@@ -107,34 +107,58 @@ TEST(FunctionsSetTest, FunctionsSetMaxDerTest) {
     FunctionsSet set = FunctionsSet(SIZE, funcs);
     EXPECT_EQ(set.find_function_max_derivative(), 2);
 }
-
+//12
 TEST(FunctionsSetTest, FunctionsSetClearTest) {
     FunctionsSet funcs;
     funcs.clear();
     EXPECT_EQ(funcs.get_size(), 0);
 }
-
-//12
+//13
+TEST(FunctionsSetTest, FunctionsSetGetItemTest) {
+    FunctionsSet funcs;
+    EXPECT_EQ(funcs[3]->get_type(), QUADRATIC);
+}
+//14
+TEST(FunctionsSetTest, FunctionsSetSetItemTest) {
+    FunctionsSet funcs;
+    funcs[3]->set_type(HARMONIC);
+    EXPECT_EQ(funcs[3]->get_type(), HARMONIC);
+}
+//15
+TEST(FunctionsSetTest, FunctionsSetOverloadOperatorsTest) {
+    Function func = Function(HARMONIC, 1, 1, 0, 0, 1, 1);
+    Function func1;
+    Function func2;
+    EXPECT_TRUE(func2 == func1);
+    EXPECT_TRUE(func != func1);
+}
+//16
 TEST(ExceptionsTest, DenominatorTest) {
     Function func = Function(HARMONIC, 2, 1, 0, 0, 0, 5);
     EXPECT_THROW(func.obtaining_the_antiderivative(), std::runtime_error);
 }
-//13
+//17
 TEST(ExceptionsTest, AddTest) {
     FunctionsSet func;
     Function func1;
     EXPECT_THROW(func.add(6, func1), std::runtime_error);
     EXPECT_THROW(func.add(-1, func1), std::runtime_error);
-}//14
+}
+//18
 TEST(ExceptionsTest, DelTest) {
     FunctionsSet func;
     func.clear();
     EXPECT_THROW(func.del(2), std::runtime_error);
 }
-//15
+//19
 TEST(ExceptionsTest, OperatorTest) {
     FunctionsSet func;
     EXPECT_THROW(func[-1]->get_type(), std::runtime_error);
     EXPECT_THROW(func[10]->get_type(), std::runtime_error);
 }
-
+//20
+TEST(ExceptionsTest, EmptyTest) {
+    FunctionsSet func;
+    func.clear();
+    EXPECT_THROW(func.del(1), std::runtime_error);
+}

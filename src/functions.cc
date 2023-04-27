@@ -39,7 +39,7 @@ Function::Function(FunctionsType type, float x, float a, float b, float c, float
     this->fi = fi;
 }
 
-FunctionsType Function::get_type() {
+FunctionsType Function::get_type() const {
     return type;
 }
 
@@ -128,9 +128,59 @@ float Function::obtaining_the_antiderivative() {
     }
 }
 
+std::istream& operator>>(std::istream& in, Function& func) {
+    std::cout << "choose function type:\n 0 - Quadratic\n 1 - Harmonic\n";
+    int key;
+    in >> key;
+    if (key == 0) {
+        func.type = QUADRATIC;
+        func.fi = func.w = 0;
+        std::cout << "input a: ";
+        in >> func.a;
+        std::cout << "input x: ";
+        in >> func.x;
+        std::cout << "input b: ";
+        in >> func.b;
+        std::cout << "input c: ";
+        in >> func.c;
+    }
+    else if(key==1){
+        func.type = HARMONIC;
+        func.b = func.c = 0;
+        std::cout << "input a: ";
+        in >> func.a;
+        std::cout << "input x: ";
+        in >> func.x;
+        std::cout << "input w: ";
+        in >> func.w;
+        std::cout << "input fi: ";
+        in >> func.fi;
+    }
+    return in;
+}
+
 std::ostream& operator<<(std::ostream& out, const Function& func) {
-    out << func.type;
+    out << "type:" << string_functions_type(func.type) << "\n";
+    if (func.type == QUADRATIC) {
+        out << "a = " << func.a << "\n" << "b = " << func.b << "\n" <<
+            "c = " << func.c << "\n" << "x = " << func.x<<"\n";
+    }
+    else {
+        out << "a = " << func.a << "\n" << "w = " << func.w << "\n" <<
+            "fi = " << func.fi << "\n" << "x = " << func.x<<"\n";
+    }
     return out;
+}
+
+bool operator ==(const Function& func, const Function& other) {
+    bool eq_type = false;
+    if (func.get_type() == other.get_type())
+        eq_type = true;
+    return eq_type;
+}
+
+bool operator !=(const Function& func, const Function& other) {
+    return !(func == other);
 }
 
 FunctionsSet::FunctionsSet() {
@@ -153,6 +203,14 @@ FunctionsSet::FunctionsSet(int size, FunctionPtr* functions) {
         this->function[i]->set_c(functions[i]->get_c());
         this->function[i]->set_w(functions[i]->get_w());
         this->function[i]->set_fi(functions[i]->get_fi());
+    }
+}
+
+FunctionsSet::FunctionsSet(const FunctionsSet& func) {
+    function = new Function * [SIZE];
+    this->size = func.size;
+    for (int i = 0; i < SIZE; ++i) {
+        this->function[i] = func.function[i];
     }
 }
 
@@ -245,3 +303,4 @@ void FunctionsSet::swap(FunctionsSet& other) {
     std::swap(function, other.function);
     std::swap(size, other.size);
 }
+
