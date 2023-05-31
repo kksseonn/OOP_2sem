@@ -1,164 +1,188 @@
 #include <gtest/gtest.h>
 #include <functions/functions.h>
 #define SIZE 4
-//1
-TEST(FunctionTest, DefoltConstructorFunctionTest) {
-    Function func;
-    EXPECT_EQ(func.get_type(),QUADRATIC);
-    EXPECT_NEAR(func.get_x(), 1, 0.1);
-    EXPECT_NEAR(func.get_a(), 1, 0.1);
-    EXPECT_NEAR(func.get_b(), 1, 0.1);
-    EXPECT_NEAR(func.get_c(), 1, 0.1);
-    EXPECT_EQ(func.get_w(), 0);
-    EXPECT_EQ(func.get_fi(), 0);
-}
-//2
-TEST(FunctionTest, SetterFunctionsTest) {
 
-    Function func;
-    func.set_x(2);
-    func.set_a(2.1);
-    func.set_b(2.2);
-    func.set_c(2.3);
-    func.set_w(2.4);
-    func.set_fi(2.5);
-    func.set_type(HARMONIC);
-    EXPECT_EQ(func.get_type(), HARMONIC);
-    EXPECT_NEAR(func.get_x(), 2, 0.001);
-    EXPECT_NEAR(func.get_a(), 2.1, 0.001);
-    EXPECT_NEAR(func.get_b(), 2.2, 0.001);
-    EXPECT_NEAR(func.get_c(), 2.3, 0.001);
-    EXPECT_NEAR(func.get_w(), 2.4, 0.001);
-    EXPECT_NEAR(func.get_fi(), 2.5, 0.001);
-}
-//3
-TEST(FunctionsTest, FunctionsConstructorTest) {
+TEST(FunctionTest, SetterFunctionTest) {
+    Quadratic func1;
+    func1.set_x(1);
+    func1.set_a(2);
+    func1.set_b(3);
+    func1.set_c(4);
+    EXPECT_EQ(func1.get_x(), 1);
+    EXPECT_EQ(func1.get_a(), 2);
+    EXPECT_EQ(func1.get_b(), 3);
+    EXPECT_EQ(func1.get_c(), 4);
 
-    Function func = Function(HARMONIC, 2, 2.1, 2.2, 2.3, 2.4, 2.5);
-    EXPECT_EQ(func.get_type(), HARMONIC);
-    EXPECT_NEAR(func.get_x(), 2, 0.002);
-    EXPECT_NEAR(func.get_a(), 2.1, 0.0002);
-    EXPECT_NEAR(func.get_b(), 2.2, 0.0002);
-    EXPECT_NEAR(func.get_c(), 2.3, 0.0002);
-    EXPECT_NEAR(func.get_w(), 2.4, 0.0002);
-    EXPECT_NEAR(func.get_fi(), 2.5, 0.0002);
+    Harmonic func2;
+    func2.set_x(2);
+    func2.set_a(2.1);
+    func2.set_w(2.4);
+    func2.set_fi(2.5);
+    EXPECT_NEAR(func2.get_x(), 2, 0.001);
+    EXPECT_NEAR(func2.get_a(), 2.1, 0.001);
+    EXPECT_NEAR(func2.get_w(), 2.4, 0.001);
+    EXPECT_NEAR(func2.get_fi(), 2.5, 0.001);
 }
-//4
-TEST(FunctionsTest, FunctionsCalcTest) {
-    Function func = Function(QUADRATIC, 2, 1, 2, 3, 0, 0);
-    Function func1 = Function(HARMONIC, 2, 1, 0, 0, 4, 5);
-    EXPECT_EQ(func.calc_from_argument(), 11);
-    EXPECT_NEAR(func1.calc_from_argument(), 0.9074, 0.001);
+//QUADRATIC
+// 
+TEST(QuadraticTest, QuadraticConstructorTest) {
+    Quadratic func1 = Quadratic(1, 2, 3, 4);
+    EXPECT_EQ(func1.get_x(), 1);
+    EXPECT_EQ(func1.get_a(), 2);
+    EXPECT_EQ(func1.get_b(), 3);
+    EXPECT_EQ(func1.get_c(), 4);
 }
-//5
-TEST(FunctionsTest, FunctionsDerivativeTest) {
-    Function func = Function(QUADRATIC, 2, 1, 2, 3, 0, 0);
-    Function func1 = Function(HARMONIC, 2, 1, 0, 0, 4, 5);
-    EXPECT_EQ(func.getting_the_derivative(), 6);
-    EXPECT_NEAR(func1.getting_the_derivative(), -1.6805, 0.001);
+
+TEST(QuadraticTest, QuadraticCopyConstructorTest) {
+    Quadratic func = Quadratic(1, 2, 3, 4);
+    Quadratic func1(func);
+    EXPECT_EQ(func1.get_x(), 1);
+    EXPECT_EQ(func1.get_a(), 2);
+    EXPECT_EQ(func1.get_b(), 3);
+    EXPECT_EQ(func1.get_c(), 4);
 }
-//6
-TEST(FunctionsTest, FunctionsAntiderivativeTest) {
-    Function func = Function(QUADRATIC, 2, 1, 2, 3, 0, 0);
-    Function func1 = Function(HARMONIC, 2, 1, 0, 0, 4, 5);
+
+TEST(QuadraticTest, QuadraticOverloadCopyTest) {
+    Quadratic func = Quadratic(1, 2, 3, 4);
+    Quadratic func1 = func;
+    EXPECT_EQ(func1.get_x(), 1);
+    EXPECT_EQ(func1.get_a(), 2);
+    EXPECT_EQ(func1.get_b(), 3);
+    EXPECT_EQ(func1.get_c(), 4);
+}
+
+TEST(QuadraticTest, QuadraticCalcTest) {
+    Quadratic func1 = Quadratic(1, 2, 3, 4);
+    EXPECT_EQ(func1.calc_from_argument(), 9);
+}
+
+TEST(QuadraticTest, QuadraticDerTest) {
+    Quadratic func1 = Quadratic(1, 2, 3, 4);
+    EXPECT_EQ(func1.getting_the_derivative(), 7);
+}
+
+TEST(QuadraticTest, QuadraticAntiDerTest) {
+    Quadratic func = Quadratic(2, 1, 2, 3);
     EXPECT_NEAR(func.obtaining_the_antiderivative(), 12.666, 0.002);
-    EXPECT_NEAR(func1.obtaining_the_antiderivative(), 0.1050, 0.002);
 }
-//7
-TEST(FunctionsSetTest, FunctionsSetDefaultConstructor) {
-    FunctionsSet set;
-    EXPECT_EQ(set.get_size(), 5);
+
+//HARMONIC
+
+TEST(HarmonicTest, HarmonicConstructorTest) {
+    Harmonic func1 = Harmonic(2, 1, 4, 5);
+    EXPECT_EQ(func1.get_x(), 2);
+    EXPECT_EQ(func1.get_a(), 1);
+    EXPECT_EQ(func1.get_w(), 4);
+    EXPECT_EQ(func1.get_fi(), 5);
 }
-//8
+
+TEST(HarmonicTest, HarmonicCopyConstructorTest) {
+    Harmonic func = Harmonic(1, 2, 3, 4);
+    Harmonic func1(func);
+    EXPECT_EQ(func1.get_x(), 1);
+    EXPECT_EQ(func1.get_a(), 2);
+    EXPECT_EQ(func1.get_w(), 3);
+    EXPECT_EQ(func1.get_fi(), 4);
+}
+
+TEST(HarmonicTest, HarmonicOverloadCopyTest) {
+    Harmonic func = Harmonic(2, 1, 4, 5);
+    Harmonic func1 = func;
+    EXPECT_EQ(func1.get_x(), 2);
+    EXPECT_EQ(func1.get_a(), 1);
+    EXPECT_EQ(func1.get_w(), 4);
+    EXPECT_EQ(func1.get_fi(), 5);
+}
+
+TEST(HarmonicTest, HarmonicCalcTest) {
+    Harmonic func = Harmonic(2, 1, 4, 5);
+    EXPECT_NEAR(func.calc_from_argument(), 0.9074, 0.002);
+}
+
+TEST(HarmonicTest, HarmonicDerTest) {
+    Harmonic func = Harmonic(2, 1, 4, 5);
+    EXPECT_NEAR(func.getting_the_derivative(), -1.6805, 0.001);
+}
+
+TEST(HarmonicTest, HarmonicAntiDerTest) {
+    Harmonic func = Harmonic(2, 1, 4, 5);
+    EXPECT_NEAR(func.obtaining_the_antiderivative(), 0.1050, 0.002);
+}
+
+//FUNCTIONSSET
+
 TEST(FunctionsSetTest, FunctionSetConstructor){
-    FunctionPtr* functions = new Function * [SIZE];
-    functions[0] = new Function(QUADRATIC, 1, 2, 3, 4, 0, 0);
-    functions[1] = new Function(HARMONIC, 1, 1, 0, 0, 1, 1);
-    functions[2] = new Function(QUADRATIC, 2, 2, 2, 2, 0, 0);
-    functions[3] = new Function(HARMONIC, 3, 3, 0, 0, 3, 3);
-    FunctionsSet func = FunctionsSet(SIZE, functions);
-    EXPECT_EQ(func.get_size(), SIZE);
-    EXPECT_EQ(func[2]->getting_the_derivative(), 10);
-    EXPECT_EQ(func[0]->get_type(), QUADRATIC);
-    EXPECT_EQ(func[1]->get_type(), HARMONIC);
+    std::vector<FunctionPtr> funcs;
+    Quadratic func = Quadratic(1, 2, 3, 4);
+    Harmonic func1 = Harmonic(2, 1, 4, 5);
+    funcs.push_back(std::make_shared<Quadratic>(func));
+    funcs.push_back(std::make_shared<Harmonic>(func1));
+    FunctionsSet set = FunctionsSet(funcs);
+    EXPECT_EQ(set.get_size(), 2);
+    EXPECT_EQ(set[0]->calc_from_argument(), 9);
+    EXPECT_NEAR(set[1]->calc_from_argument(), 0.9074, 0.002);
 }
-//9
+
+TEST(FunctionsSetTest, FunctionSetCopyConstructor) {
+    std::vector<FunctionPtr> funcs;
+    Quadratic func = Quadratic(1, 2, 3, 4);
+    Harmonic func1 = Harmonic(2, 1, 4, 5);
+    funcs.push_back(std::make_shared<Quadratic>(func));
+    funcs.push_back(std::make_shared<Harmonic>(func1));
+    FunctionsSet set = FunctionsSet(funcs);
+    FunctionsSet set1 = set;
+    EXPECT_EQ(set1.get_size(), 2);
+    EXPECT_EQ(set1[0]->calc_from_argument(), 9);
+    EXPECT_NEAR(set1[1]->calc_from_argument(), 0.9074, 0.002);
+}
+
 TEST(FunctionsSetTest, FunctionsSetAddTest) {
-    FunctionsSet funcs;
-    Function f = Function(HARMONIC, 2, 3, 0, 0, 4, 5);
-    funcs.add(2, f);
-    EXPECT_EQ(funcs.get_size(), 6);
-    EXPECT_EQ(funcs[2]->get_type(), HARMONIC);
+    std::vector<FunctionPtr> funcs;
+    Quadratic func = Quadratic(1, 2, 3, 4);
+    Harmonic func1 = Harmonic(2, 1, 4, 5);
+    funcs.push_back(std::make_shared<Quadratic>(func));
+    funcs.push_back(std::make_shared<Harmonic>(func1));
+    FunctionsSet set = FunctionsSet(funcs);
+    set.add(1, func1.clone());
+    EXPECT_EQ(set.get_size(), 3);
+    EXPECT_EQ(set[0]->calc_from_argument(), 9);
+    EXPECT_NEAR(set[1]->calc_from_argument(), 0.9074, 0.002);
+    EXPECT_NEAR(set[2]->calc_from_argument(), 0.9074, 0.002);
 }
-//10
+
 TEST(FunctionsSetTest, FunctionsSetDelTest) {
-    FunctionsSet funcs;
-    funcs.del(2);
-    EXPECT_EQ(funcs.get_size(), 4);
-    EXPECT_EQ(funcs[3]->get_type(), QUADRATIC);
+    std::vector<FunctionPtr> funcs;
+    Quadratic func = Quadratic(1, 2, 3, 4);
+    Harmonic func1 = Harmonic(2, 1, 4, 5);
+    Quadratic func2 = Quadratic(3, 3, 3, 3);
+    funcs.push_back(std::make_shared<Quadratic>(func));
+    funcs.push_back(std::make_shared<Harmonic>(func1));
+    funcs.push_back(std::make_shared<Quadratic>(func2));
+    FunctionsSet set = FunctionsSet(funcs);
+    set.del(0);
+    EXPECT_EQ(set.get_size(), 2);
+    EXPECT_NEAR(set[0]->calc_from_argument(), 0.9074, 0.002);
+    EXPECT_EQ(set[1]->calc_from_argument(), 39);
+    
 }
-//11
-TEST(FunctionsSetTest, FunctionsSetMaxDerTest) {
-    FunctionPtr* funcs = new Function * [SIZE];
-    funcs[0] = new Function(QUADRATIC, 1, 2, 3, 4, 0, 0);
-    funcs[1] = new Function(HARMONIC, 1, 1, 0, 0, 1, 1);
-    funcs[2] = new Function(QUADRATIC, 2, 2, 2, 2, 0, 0);
-    funcs[3] = new Function(HARMONIC, 3, 3, 0, 0, 3, 3);
-    FunctionsSet set = FunctionsSet(SIZE, funcs);
-    EXPECT_EQ(set.find_function_max_derivative(), 2);
-}
-//12
+
 TEST(FunctionsSetTest, FunctionsSetClearTest) {
-    FunctionsSet funcs;
-    funcs.clear();
-    EXPECT_EQ(funcs.get_size(), 0);
+    std::vector<FunctionPtr> funcs;
+    Quadratic func = Quadratic(1, 2, 3, 4);
+    Harmonic func1 = Harmonic(2, 1, 4, 5);
+    funcs.push_back(std::make_shared<Quadratic>(func));
+    funcs.push_back(std::make_shared<Harmonic>(func1));
+    FunctionsSet set = FunctionsSet(funcs);
+    set.clear();
+    EXPECT_EQ(set.get_size(), 0);
 }
-//13
-TEST(FunctionsSetTest, FunctionsSetGetItemTest) {
-    FunctionsSet funcs;
-    EXPECT_EQ(funcs[3]->get_type(), QUADRATIC);
-}
-//14
-TEST(FunctionsSetTest, FunctionsSetSetItemTest) {
-    FunctionsSet funcs;
-    funcs[3]->set_type(HARMONIC);
-    EXPECT_EQ(funcs[3]->get_type(), HARMONIC);
-}
-//15
-TEST(FunctionsSetTest, FunctionsSetOverloadOperatorsTest) {
-    Function func = Function(HARMONIC, 1, 1, 0, 0, 1, 1);
-    Function func1;
-    Function func2;
-    EXPECT_TRUE(func2 == func1);
-    EXPECT_TRUE(func != func1);
-}
-//16
-TEST(ExceptionsTest, DenominatorTest) {
-    Function func = Function(HARMONIC, 2, 1, 0, 0, 0, 5);
-    EXPECT_THROW(func.obtaining_the_antiderivative(), std::runtime_error);
-}
-//17
-TEST(ExceptionsTest, AddTest) {
-    FunctionsSet func;
-    Function func1;
-    EXPECT_THROW(func.add(6, func1), std::runtime_error);
-    EXPECT_THROW(func.add(-1, func1), std::runtime_error);
-}
-//18
-TEST(ExceptionsTest, DelTest) {
-    FunctionsSet func;
-    func.clear();
-    EXPECT_THROW(func.del(2), std::runtime_error);
-}
-//19
-TEST(ExceptionsTest, OperatorTest) {
-    FunctionsSet func;
-    EXPECT_THROW(func[-1]->get_type(), std::runtime_error);
-    EXPECT_THROW(func[10]->get_type(), std::runtime_error);
-}
-//20
-TEST(ExceptionsTest, EmptyTest) {
-    FunctionsSet func;
-    func.clear();
-    EXPECT_THROW(func.del(1), std::runtime_error);
+
+TEST(FunctionsSetTest, FunctionsSetMaxDerTest) {
+    std::vector<FunctionPtr> funcs;
+    Quadratic func = Quadratic(1, 2, 3, 4);
+    Harmonic func1 = Harmonic(2, 1, 4, 5);
+    funcs.push_back(std::make_shared<Quadratic>(func));
+    funcs.push_back(std::make_shared<Harmonic>(func1));
+    FunctionsSet set = FunctionsSet(funcs);
+    EXPECT_EQ(set.find_function_max_derivative(), 0);
 }

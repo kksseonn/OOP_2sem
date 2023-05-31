@@ -4,71 +4,18 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <memory>
+#include <vector>
+#include <conio.h>
 #define SIZE 4
 
-std::string string_functions_type(FunctionsType type) {
-    switch (type)
-    {
-    case QUADRATIC:
-        return "QUADRATIC";
-    case HARMONIC:
-        return "HARMONIC";
-    default:
-        throw std::runtime_error("wrong type exception");
-    }
-    return "";
-}
-
-Function::Function() {
-    type = QUADRATIC;
-    x = 1;
-    a = 1;
-    b = 1;
-    c = 1;
-    w = 0;
-    fi = 0;
-}
-
-Function::Function(FunctionsType type, float x, float a, float b, float c, float w, float fi) {
-    this->type = type;
-    this->x = x;
-    this->a = a;
-    this->b = b;
-    this->c = c;
-    this->w = w;
-    this->fi = fi;
-}
-
-FunctionsType Function::get_type() const {
-    return type;
-}
-
+//Function
 float Function::get_x() {
     return x;
 }
 
 float Function::get_a() {
     return a;
-}
-
-float Function::get_b() {
-    return b;
-}
-
-float Function::get_c() {
-    return c;
-}
-
-float Function::get_w() {
-    return w;
-}
-
-float Function::get_fi() {
-    return fi;
-}
-
-void Function::set_type(FunctionsType type) {
-    this->type = type;
 }
 
 void Function::set_x(float x) {
@@ -79,218 +26,243 @@ void Function::set_a(float a) {
     this->a = a;
 }
 
-void Function::set_b(float b) {
+void Function::swap(Function& other) {
+    std::swap(x, other.x);
+    std::swap(a, other.a);
+}
+
+//Quadratic
+
+float Quadratic::get_b() {
+    return b;
+}
+
+float Quadratic::get_c() {
+    return c;
+}
+
+void Quadratic::set_b(float b) {
     this->b = b;
 }
 
-void Function::set_c(float c) {
+void Quadratic::set_c(float c) {
     this->c = c;
 }
 
-void Function::set_w(float w) {
-    this->w = w;
+Quadratic::Quadratic() {
+    x = 1;
+    a = 1;
+    b = 1;
+    c = 1;
 }
 
-void Function::set_fi(float fi) {
-    this->fi = fi;
+Quadratic::Quadratic(float x, float a, float b, float c) {
+    this->x = x;
+    this->a = a;
+    this->b = b;
+    this->c = c;
 }
 
-float Function::calc_from_argument() {
-    switch (type)
-    {
-    case QUADRATIC:
-        return a * pow(x, 2) + b * x + c;
-    case HARMONIC:
-        return a * cos(w * x + fi);
-    }
+Quadratic::Quadratic(const Quadratic& func) {
+    this->x = func.x;
+    this->a = func.a;
+    this->b = func.b;
+    this->c = func.c;
 }
 
-float Function::getting_the_derivative() {
-    switch (type)
-    {
-    case QUADRATIC:
-        return 2*a*x+b;
-    case HARMONIC:
-        return (-a)* sin(w * x + fi)* w;
-    }
-}
-
-float Function::obtaining_the_antiderivative() {
-    switch (type)
-    {
-    case QUADRATIC:
-        return ((a*pow(x,3))/3)+((b*pow(x,2))/2)+c*x;
-    case HARMONIC:
-        if (w == 0) {
-            throw std::runtime_error("denominator is wrong.");
-        }
-        return (a*sin(w*x+fi))/w;
-    }
-}
-
-std::istream& operator>>(std::istream& in, Function& func) {
-    std::cout << "choose function type:\n 0 - Quadratic\n 1 - Harmonic\n";
-    int key;
-    in >> key;
-    if (key == 0) {
-        func.type = QUADRATIC;
-        func.fi = func.w = 0;
-        std::cout << "input a: ";
-        in >> func.a;
-        std::cout << "input x: ";
-        in >> func.x;
-        std::cout << "input b: ";
-        in >> func.b;
-        std::cout << "input c: ";
-        in >> func.c;
-    }
-    else if(key==1){
-        func.type = HARMONIC;
-        func.b = func.c = 0;
-        std::cout << "input a: ";
-        in >> func.a;
-        std::cout << "input x: ";
-        in >> func.x;
-        std::cout << "input w: ";
-        in >> func.w;
-        std::cout << "input fi: ";
-        in >> func.fi;
-    }
-    return in;
-}
-
-std::ostream& operator<<(std::ostream& out, const Function& func) {
-    out << "type:" << string_functions_type(func.type) << "\n";
-    if (func.type == QUADRATIC) {
-        out << "a = " << func.a << "\n" << "b = " << func.b << "\n" <<
-            "c = " << func.c << "\n" << "x = " << func.x<<"\n";
-    }
-    else {
-        out << "a = " << func.a << "\n" << "w = " << func.w << "\n" <<
-            "fi = " << func.fi << "\n" << "x = " << func.x<<"\n";
-    }
-    return out;
-}
-
-bool operator ==(const Function& func, const Function& other) {
-    bool eq_type = false;
-    if (func.get_type() == other.get_type())
-        eq_type = true;
-    return eq_type;
-}
-
-bool operator !=(const Function& func, const Function& other) {
-    return !(func == other);
-}
-
-FunctionsSet::FunctionsSet() {
-    this->size = 5;
-    function = new Function * [size];
-    for (int i = 0; i < size; ++i) {
-        this->function[i] = new Function();
-    }
-}
-
-FunctionsSet::FunctionsSet(int size, FunctionPtr* functions) {
-    this->size = size;
-    function = new Function * [size];
-    for (int i = 0; i < size; ++i) {
-        this->function[i] = new Function();
-        this->function[i]->set_type(functions[i]->get_type());
-        this->function[i]->set_x(functions[i]->get_x());
-        this->function[i]->set_a(functions[i]->get_a());
-        this->function[i]->set_b(functions[i]->get_b());
-        this->function[i]->set_c(functions[i]->get_c());
-        this->function[i]->set_w(functions[i]->get_w());
-        this->function[i]->set_fi(functions[i]->get_fi());
-    }
-}
-
-FunctionsSet::FunctionsSet(const FunctionsSet& func) {
-    function = new Function * [SIZE];
-    this->size = func.size;
-    for (int i = 0; i < SIZE; ++i) {
-        this->function[i] = func.function[i];
-    }
-}
-
-FunctionsSet::~FunctionsSet() {
-    for (int i = 0; i < size; ++i) {
-        delete function[i];
-    }
-    delete[] function;
-}
-
-FunctionPtr FunctionsSet::get_function_by_index(int i) {
-    return function[i];
-}
-
-int FunctionsSet::get_size() {
-    return size;
-}
-
-FunctionPtr FunctionsSet::operator[](int ind) const {
-    if (ind<0 || ind>size) {
-        throw std::runtime_error("invalid index");
-    }
-    return function[ind];
-}
-
-FunctionPtr& FunctionsSet::operator[](int ind) {
-    if (ind<0 || ind>size) {
-        throw std::runtime_error("invalid index");
-    }
-    return function[ind];
-}
-
-FunctionsSet& FunctionsSet::operator =(FunctionsSet other) {
+Quadratic& Quadratic::operator=(Quadratic& other) {
     swap(other);
     return *this;
 }
 
-void FunctionsSet::add(int ind, Function func) {
-    if (ind < 0 || ind > size) {
-        throw std::runtime_error("Ind out of the range");
-    }
-    ++size;
-    FunctionPtr* functions = new Function * [size];
-    for (int i = 0; i < ind; ++i){
-        functions[i] = new Function(*this->function[i]);
-    }
+FunctionPtr Quadratic::clone() {
+    return make_shared<Quadratic>(x, a, b, c);
+}
 
-    functions[ind] = new Function(func);
+float Quadratic::calc_from_argument() const {
+    return a * pow(x, 2) + b * x + c;
+}
 
-    for (int i = size - 1; i > ind; --i) {
-        functions[i] = new Function(*this->function[i - 1]);
+float Quadratic::getting_the_derivative() const {
+    return 2 * a * x + b;
+}
+
+float Quadratic::obtaining_the_antiderivative() const {
+    return ((a * pow(x, 3)) / 3) + ((b * pow(x, 2)) / 2) + c * x;
+}
+
+void Quadratic::print(ostream& stream) const {
+    stream << " Type of Function: Quadratic" << endl;
+    stream << "x = " << x << "\n" << "a = " << a << "\n" << "b = " << b << "\n" << "c = " << c << "\n";
+}
+
+void Quadratic::swap(Quadratic& other) {
+    std::swap(x, other.x);
+    std::swap(a, other.a);
+    std::swap(b, other.b);
+    std::swap(c, other.c);
+}
+
+FunctionPtr Quadratic::cin(istream& in) {
+    in >> x;
+    in >> a;
+    in >> b;
+    in >> c;
+    return this->clone();
+}
+
+//Harmonic
+
+float Harmonic::get_w() {
+    return w;
+}
+
+float Harmonic::get_fi() {
+    return fi;
+}
+
+void Harmonic::set_w(float w) {
+    this->w = w;
+}
+
+void Harmonic::set_fi(float fi) {
+    this->fi = fi;
+}
+
+
+Harmonic::Harmonic() {
+    x = 2;
+    a = 2;
+    w = 2;
+    fi = 2;
+}
+
+Harmonic::Harmonic(float x, float a, float w, float fi) {
+    this->x = x;
+    this->a = a;
+    this->w = w;
+    this->fi = fi;
+}
+
+Harmonic::Harmonic(const Harmonic& func) {
+    this->x = func.x;
+    this->a = func.a;
+    this->w = func.w;
+    this->fi = func.fi;
+}
+
+Harmonic& Harmonic::operator=(Harmonic& other) {
+    swap(other);
+    return *this;
+}
+
+FunctionPtr Harmonic::clone() {
+    return make_unique<Harmonic>(x, a, w, fi);
+}
+
+float Harmonic::calc_from_argument() const {
+    return a * cos(w * x + fi);
+}
+
+float Harmonic::getting_the_derivative() const {
+    return (-a) * sin(w * x + fi) * w;
+}
+
+float Harmonic::obtaining_the_antiderivative() const {
+    if (w == 0) {
+        throw std::runtime_error("denominator is wrong.");
     }
-    std::swap(this->function, functions);
+    return (a * sin(w * x + fi)) / w;
+}
+
+void Harmonic::print(ostream& stream) const {
+    stream << " Type of Function: Harmonic" << endl;
+    stream << "x = " << x << "\n" << "a = " << a << "\n" << "w = " << w << "\n" << "fi = " << fi << "\n";
+}
+
+void Harmonic::swap(Harmonic& other) {
+    std::swap(x, other.x);
+    std::swap(a, other.a);
+    std::swap(w, other.w);
+    std::swap(fi, other.fi);
+}
+
+FunctionPtr Harmonic::cin(istream& in) {
+    in >> x;
+    in >> a;
+    in >> w;
+    in >> fi;
+    return this->clone();
+}
+
+//FunctionsSet
+
+FunctionsSet::FunctionsSet(vector<FunctionPtr> funcs) {
+    for (auto elem : funcs) _function.push_back(elem->clone());
+}
+
+FunctionsSet::FunctionsSet(FunctionsSet& other) {
+    _function.reserve(other.get_size());
+    for (auto elem: other._function) {
+        _function.push_back(elem->clone());
+    }
+}
+
+void FunctionsSet::swap(FunctionsSet& other) {
+    std::swap(_function, other._function);
+}
+
+FunctionsSet& FunctionsSet::operator=(FunctionsSet& other) {
+    swap(other);
+    return *this;
+}
+
+int FunctionsSet::get_size() {
+    return _function.size();
+}
+
+FunctionPtr FunctionsSet::operator[](int ind) const {
+    if (ind<0 || ind>_function.size()) {
+        throw std::runtime_error("invalid index");
+    }
+    return _function[ind];
+}
+
+FunctionPtr& FunctionsSet::operator[](int ind) {
+    if (ind<0 || ind>_function.size()) {
+        throw std::runtime_error("invalid index");
+    }
+    return _function[ind];
+}
+
+void FunctionsSet::add(int ind, FunctionPtr func) {
+    if (ind < 0 || ind >_function.size()) {
+        throw std::runtime_error("Index out of the range");
+    }
+    else if (ind == (this->get_size() - 1)) {
+        _function.push_back(func);
+    }
+    else _function.insert(_function.begin() + ind, func);
 }
 
 void FunctionsSet::del(int ind) {
-    if (size <= 0) {
-        throw std::runtime_error("Array is empty");
-    }
-    for (int i = ind; i < size - 1; ++i) {
-        function[i] = function[i + 1];
-    }
-    --size;
+    _function.erase(_function.begin() + ind);
 }
 
 void FunctionsSet::clear() {
-    function = nullptr;
-    size = 0;
+    _function.clear();
 }
 
-void FunctionsSet::print_current(int ind) {
+void FunctionsSet::print_current(int ind) const{
     system("cls");
-    std::cout << *function[ind];
+    _function[ind]->print(cout);
 }
 
-int FunctionsSet::find_function_max_derivative() {
+float FunctionsSet::find_function_max_derivative() const {
     int ind = 0;
-    double max_der = function[0]->getting_the_derivative();
-    for (int i = 1; i < size - 1; ++i) {
-        double cur_der = function[i]->getting_the_derivative();
+    double max_der = _function[0]->getting_the_derivative();
+    for (int i = 1; i < _function.size() - 1; ++i) {
+        double cur_der = _function[i]->getting_the_derivative();
         if (cur_der >= max_der) {
             ind = i;
             max_der = cur_der;
@@ -299,8 +271,29 @@ int FunctionsSet::find_function_max_derivative() {
     return ind;
 }
 
-void FunctionsSet::swap(FunctionsSet& other) {
-    std::swap(function, other.function);
-    std::swap(size, other.size);
+FunctionPtr FunctionsSet::get_function_by_index(int ind) {
+    return _function[ind];
 }
+
+FunctionPtr input(Function& func) {
+    int type = -1;
+    Quadratic quad;
+    Harmonic harm;
+    while (type < 0 || type>1) {
+        std::cout << "Quadratic - 0\nHarmonic - 1\n";
+        std::cin >> type;
+    }
+    switch (type) {
+    case 0:
+        return(quad.cin(std::cin));
+    case 1:
+        return(harm.cin(std::cin));
+    }
+}
+
+
+
+
+
+
 

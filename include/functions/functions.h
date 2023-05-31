@@ -1,65 +1,105 @@
 #pragma once
+#include <memory>
 #include <iostream>
-#define FunctionPtr Function*
-
-enum FunctionsType {
-	QUADRATIC,
-	HARMONIC
-};
+#include <vector>
+#define FunctionPtr shared_ptr<Function>
+//#define make_sp_function make_shared<Function>
+using namespace std;
 
 class Function {
-	FunctionsType type;
-	float x, a, b, c, w, fi;
 public:
-	Function();
-	Function(FunctionsType type, float x, float a, float b, float c, float w, float fi);
-
-	FunctionsType get_type() const;
 	float get_x();
 	float get_a();
-	float get_b();
-	float get_c();
-	float get_w();
-	float get_fi();
-
-	void set_type(FunctionsType type);
 	void set_x(float x);
 	void set_a(float a);
+
+	virtual float calc_from_argument() const = 0;
+	virtual float getting_the_derivative() const = 0;
+	virtual float obtaining_the_antiderivative() const = 0;
+	
+	virtual FunctionPtr clone() = 0;
+	virtual FunctionPtr cin(istream& in) = 0;
+	virtual void print(ostream& stream) const = 0;
+	virtual void swap(Function& other);
+
+	virtual ~Function() = default;
+
+protected:
+	float x, a;
+	Function() = default;
+	Function(const Function& func) = default;
+	Function& operator =(const Function& other) = default;
+};
+
+class Quadratic : public Function {
+	float b, c;
+public:
+	float get_b();
+	float get_c();
 	void set_b(float b);
 	void set_c(float c);
+
+	Quadratic();
+	Quadratic(float x, float a, float b, float c);
+	Quadratic(const Quadratic& func);
+
+	Quadratic& operator=(Quadratic& other);
+	FunctionPtr clone() override;
+	
+	float calc_from_argument() const override;
+	float getting_the_derivative() const override;
+	float obtaining_the_antiderivative() const override;
+
+	void print(ostream& stream) const override;
+	void swap(Quadratic& other);
+	FunctionPtr cin(istream& in) override;
+};
+
+class Harmonic : public Function {
+	float w, fi;
+public:
+	float get_w();
+	float get_fi();
 	void set_w(float w);
 	void set_fi(float fi);
 
-	float calc_from_argument();
-	float getting_the_derivative();
-	float obtaining_the_antiderivative();
+	Harmonic();
+	Harmonic(float x, float a, float w, float fi);
+	Harmonic(const Harmonic& func);
 
-	friend std::istream& operator>>(std::istream& in, Function& func);
-	friend std::ostream& operator<<(std::ostream& out, const Function& func);
+	Harmonic& operator=(Harmonic& other);
+	FunctionPtr clone() override;
+
+	float calc_from_argument() const override;
+	float getting_the_derivative() const override;
+	float obtaining_the_antiderivative() const override;
+
+	void print(ostream& stream) const override;
+	void swap(Harmonic& other);
+	FunctionPtr cin(istream& in) override;
+
+	
 };
-
-bool operator ==(const Function& func, const Function& other);
-bool operator != (const Function& func, const Function& other);
 
 class FunctionsSet {
-	FunctionPtr* function;
-	int size;
+	vector<FunctionPtr> _function;
 public:
-	FunctionsSet();
-	FunctionsSet(int size, FunctionPtr* functions);
-	FunctionsSet(const FunctionsSet& func);
-	~FunctionsSet();
+	FunctionsSet() = default;
+	FunctionsSet(vector<FunctionPtr> funcs);
+	FunctionsSet(FunctionsSet& other);
+	void swap(FunctionsSet& other);
+	FunctionsSet& operator=(FunctionsSet& other);
 
 	int get_size();
-	FunctionPtr get_function_by_index(int ind);
 	FunctionPtr operator[](int ind) const;
 	FunctionPtr& operator[](int ind);
-	FunctionsSet& operator=(FunctionsSet other);
 	
-	void add(int ind, Function func);
+	void add(int ind, FunctionPtr func);
 	void del(int ind);
 	void clear();
-	void print_current(int ind);
-	int find_function_max_derivative();
-	void swap(FunctionsSet& other);
+	void print_current(int ind) const;
+	float find_function_max_derivative() const;
+	FunctionPtr get_function_by_index(int ind);
 };
+
+FunctionPtr input(Function& func);
