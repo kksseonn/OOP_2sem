@@ -71,7 +71,7 @@ int main() {
             case 83:
                 if (set.get_size() == 1) {
                     system("cls");
-                    std::cout << "Array will be empty";
+                    std::cout << "Array will is empty\n" << "Input new function: " << endl;
                     set.clear();
                     while (!is_correct) {
                         function = input(*function);

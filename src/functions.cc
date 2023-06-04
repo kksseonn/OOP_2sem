@@ -104,10 +104,10 @@ void Quadratic::swap(Quadratic& other) {
 }
 
 FunctionPtr Quadratic::cin(istream& in) {
-    in >> x;
-    in >> a;
-    in >> b;
-    in >> c;
+    std::cout << "x = "; in >> x;
+    std::cout << "a = "; in >> a;
+    std::cout << "b = "; in >> b;
+    std::cout << "c = "; in >> c;
     return this->clone();
 }
 
@@ -188,10 +188,10 @@ void Harmonic::swap(Harmonic& other) {
 }
 
 FunctionPtr Harmonic::cin(istream& in) {
-    in >> x;
-    in >> a;
-    in >> w;
-    in >> fi;
+    std::cout << "x = "; in >> x;
+    std::cout << "a = "; in >> a;
+    std::cout << "w = "; in >> w;
+    std::cout << "fi = "; in >> fi;
     return this->clone();
 }
 
